@@ -5,547 +5,250 @@ require("dotenv").config();
 // Users List
 const usersPoints = {};
 
+const Rule = {
+    Numbers: [0, 1, 2, 3, 4, 5, 6, 7],
+    JQKA: [8, 9, 10, 11],
+    JQ: [8, 9],
+    KA: [10, 11],
+};
+
 const CreateRandomNumber = async (user) => {
-    for (var i = 0; i < 15; i++) {
-        var rNum = rand.intBetween(1, 11);
-        user.randomNum[i] = rNum;
-    }
-    for (var i = 0; i < 15; i++) {
-        user.skeletonRandomNum[i] = user.randomNum[i] * -1;
-    }
+    user.previousCardNum = user.newCardNum;
+    user.previousColorNum = user.newColorNum;
+
+    var newCardRandomNum = rand.intBetween(0, 12);
+    user.newCardNum = newCardRandomNum;
+
+    var newColorRandomNum = rand.intBetween(0, 1);
+    // 0 = Red, 1 = Black
+    user.newColorNum = newColorRandomNum;
 };
 
-const calcMatch = (user, lines) => {
-    for (var i = 1; i <= lines; i++) {
-        var NumberStack = [];
-        var money = 0;
-        switch (i) {
-            case 1:
-                NumberStack.push(user.randomNum[9]);
-                NumberStack.push(user.randomNum[8]);
-                NumberStack.push(user.randomNum[7]);
-                NumberStack.push(user.randomNum[6]);
-                NumberStack.push(user.randomNum[5]);
-                money = countCheck(NumberStack, user);
-                if (money > 0) {
-                    user.skeletonRandomNum[9] = user.randomNum[9];
-                    user.skeletonRandomNum[8] = user.randomNum[8];
-                    user.skeletonRandomNum[7] = user.randomNum[7];
-                    user.skeletonRandomNum[6] = user.randomNum[6];
-                    user.skeletonRandomNum[5] = user.randomNum[5];
-                    user.paylines.push(i);
-                }
-                break;
-            case 2:
-                NumberStack.push(user.randomNum[4]);
-                NumberStack.push(user.randomNum[3]);
-                NumberStack.push(user.randomNum[2]);
-                NumberStack.push(user.randomNum[1]);
-                NumberStack.push(user.randomNum[0]);
-                money = countCheck(NumberStack, user);
-                if (money > 0) {
-                    user.skeletonRandomNum[4] = user.randomNum[4];
-                    user.skeletonRandomNum[3] = user.randomNum[3];
-                    user.skeletonRandomNum[2] = user.randomNum[2];
-                    user.skeletonRandomNum[1] = user.randomNum[1];
-                    user.skeletonRandomNum[0] = user.randomNum[0];
-                    user.paylines.push(i);
-                }
-                break;
-            case 3:
-                NumberStack.push(user.randomNum[14]);
-                NumberStack.push(user.randomNum[13]);
-                NumberStack.push(user.randomNum[12]);
-                NumberStack.push(user.randomNum[11]);
-                NumberStack.push(user.randomNum[10]);
-                money = countCheck(NumberStack, user);
-                if (money > 0) {
-                    user.skeletonRandomNum[14] = user.randomNum[14];
-                    user.skeletonRandomNum[13] = user.randomNum[13];
-                    user.skeletonRandomNum[12] = user.randomNum[12];
-                    user.skeletonRandomNum[11] = user.randomNum[11];
-                    user.skeletonRandomNum[10] = user.randomNum[10];
-                    user.paylines.push(i);
-                }
-                break;
-            case 4:
-                NumberStack.push(user.randomNum[4]);
-                NumberStack.push(user.randomNum[8]);
-                NumberStack.push(user.randomNum[12]);
-                NumberStack.push(user.randomNum[6]);
-                NumberStack.push(user.randomNum[0]);
-                money = countCheck(NumberStack, user);
-                if (money > 0) {
-                    user.skeletonRandomNum[4] = user.randomNum[4];
-                    user.skeletonRandomNum[8] = user.randomNum[8];
-                    user.skeletonRandomNum[12] = user.randomNum[12];
-                    user.skeletonRandomNum[6] = user.randomNum[6];
-                    user.skeletonRandomNum[0] = user.randomNum[0];
-                    user.paylines.push(i);
-                }
-                break;
-            case 5:
-                NumberStack.push(user.randomNum[14]);
-                NumberStack.push(user.randomNum[8]);
-                NumberStack.push(user.randomNum[2]);
-                NumberStack.push(user.randomNum[6]);
-                NumberStack.push(user.randomNum[10]);
-                money = countCheck(NumberStack, user);
-                if (money > 0) {
-                    user.skeletonRandomNum[14] = user.randomNum[14];
-                    user.skeletonRandomNum[8] = user.randomNum[8];
-                    user.skeletonRandomNum[2] = user.randomNum[2];
-                    user.skeletonRandomNum[6] = user.randomNum[6];
-                    user.skeletonRandomNum[10] = user.randomNum[10];
-                    user.paylines.push(i);
-                }
-                break;
-            case 6:
-                NumberStack.push(user.randomNum[4]);
-                NumberStack.push(user.randomNum[3]);
-                NumberStack.push(user.randomNum[7]);
-                NumberStack.push(user.randomNum[1]);
-                NumberStack.push(user.randomNum[0]);
-                money = countCheck(NumberStack, user);
-                if (money > 0) {
-                    user.skeletonRandomNum[4] = user.randomNum[4];
-                    user.skeletonRandomNum[3] = user.randomNum[3];
-                    user.skeletonRandomNum[7] = user.randomNum[7];
-                    user.skeletonRandomNum[1] = user.randomNum[1];
-                    user.skeletonRandomNum[0] = user.randomNum[0];
-                    user.paylines.push(i);
-                }
-                break;
-            case 7:
-                NumberStack.push(user.randomNum[14]);
-                NumberStack.push(user.randomNum[13]);
-                NumberStack.push(user.randomNum[7]);
-                NumberStack.push(user.randomNum[11]);
-                NumberStack.push(user.randomNum[10]);
-                money = countCheck(NumberStack, user);
-                if (money > 0) {
-                    user.skeletonRandomNum[14] = user.randomNum[14];
-                    user.skeletonRandomNum[13] = user.randomNum[13];
-                    user.skeletonRandomNum[7] = user.randomNum[7];
-                    user.skeletonRandomNum[11] = user.randomNum[11];
-                    user.skeletonRandomNum[10] = user.randomNum[10];
-                    user.paylines.push(i);
-                }
-                break;
-            case 8:
-                NumberStack.push(user.randomNum[9]);
-                NumberStack.push(user.randomNum[13]);
-                NumberStack.push(user.randomNum[12]);
-                NumberStack.push(user.randomNum[11]);
-                NumberStack.push(user.randomNum[5]);
-                money = countCheck(NumberStack, user);
-                if (money > 0) {
-                    user.skeletonRandomNum[9] = user.randomNum[9];
-                    user.skeletonRandomNum[13] = user.randomNum[13];
-                    user.skeletonRandomNum[12] = user.randomNum[12];
-                    user.skeletonRandomNum[11] = user.randomNum[11];
-                    user.skeletonRandomNum[5] = user.randomNum[5];
-                    user.paylines.push(i);
-                }
-                break;
-            case 9:
-                NumberStack.push(user.randomNum[9]);
-                NumberStack.push(user.randomNum[3]);
-                NumberStack.push(user.randomNum[2]);
-                NumberStack.push(user.randomNum[1]);
-                NumberStack.push(user.randomNum[5]);
-                money = countCheck(NumberStack, user);
-                if (money > 0) {
-                    user.skeletonRandomNum[9] = user.randomNum[9];
-                    user.skeletonRandomNum[3] = user.randomNum[3];
-                    user.skeletonRandomNum[2] = user.randomNum[2];
-                    user.skeletonRandomNum[1] = user.randomNum[1];
-                    user.skeletonRandomNum[5] = user.randomNum[5];
-                    user.paylines.push(i);
-                }
-                break;
-            case 10:
-                NumberStack.push(user.randomNum[9]);
-                NumberStack.push(user.randomNum[3]);
-                NumberStack.push(user.randomNum[7]);
-                NumberStack.push(user.randomNum[1]);
-                NumberStack.push(user.randomNum[5]);
-                money = countCheck(NumberStack, user);
-                if (money > 0) {
-                    user.skeletonRandomNum[9] = user.randomNum[9];
-                    user.skeletonRandomNum[3] = user.randomNum[3];
-                    user.skeletonRandomNum[7] = user.randomNum[7];
-                    user.skeletonRandomNum[1] = user.randomNum[1];
-                    user.skeletonRandomNum[5] = user.randomNum[0];
-                    user.paylines.push(i);
-                }
-                break;
-            case 11:
-                NumberStack.push(user.randomNum[9]);
-                NumberStack.push(user.randomNum[13]);
-                NumberStack.push(user.randomNum[7]);
-                NumberStack.push(user.randomNum[11]);
-                NumberStack.push(user.randomNum[5]);
-                money = countCheck(NumberStack, user);
-                if (money > 0) {
-                    user.skeletonRandomNum[9] = user.randomNum[9];
-                    user.skeletonRandomNum[13] = user.randomNum[13];
-                    user.skeletonRandomNum[7] = user.randomNum[7];
-                    user.skeletonRandomNum[11] = user.randomNum[11];
-                    user.skeletonRandomNum[5] = user.randomNum[5];
-                    user.paylines.push(i);
-                }
-                break;
-            case 12:
-                NumberStack.push(user.randomNum[4]);
-                NumberStack.push(user.randomNum[8]);
-                NumberStack.push(user.randomNum[2]);
-                NumberStack.push(user.randomNum[6]);
-                NumberStack.push(user.randomNum[0]);
-                money = countCheck(NumberStack, user);
-                if (money > 0) {
-                    user.skeletonRandomNum[4] = user.randomNum[4];
-                    user.skeletonRandomNum[8] = user.randomNum[8];
-                    user.skeletonRandomNum[2] = user.randomNum[2];
-                    user.skeletonRandomNum[6] = user.randomNum[6];
-                    user.skeletonRandomNum[0] = user.randomNum[0];
-                    user.paylines.push(i);
-                }
-                break;
-            case 13:
-                NumberStack.push(user.randomNum[14]);
-                NumberStack.push(user.randomNum[8]);
-                NumberStack.push(user.randomNum[12]);
-                NumberStack.push(user.randomNum[6]);
-                NumberStack.push(user.randomNum[10]);
-                money = countCheck(NumberStack, user);
-                if (money > 0) {
-                    user.skeletonRandomNum[14] = user.randomNum[14];
-                    user.skeletonRandomNum[8] = user.randomNum[8];
-                    user.skeletonRandomNum[12] = user.randomNum[12];
-                    user.skeletonRandomNum[6] = user.randomNum[6];
-                    user.skeletonRandomNum[10] = user.randomNum[10];
-                    user.paylines.push(i);
-                }
-                break;
-            case 14:
-                NumberStack.push(user.randomNum[9]);
-                NumberStack.push(user.randomNum[8]);
-                NumberStack.push(user.randomNum[2]);
-                NumberStack.push(user.randomNum[6]);
-                NumberStack.push(user.randomNum[5]);
-                money = countCheck(NumberStack, user);
-                if (money > 0) {
-                    user.skeletonRandomNum[9] = user.randomNum[9];
-                    user.skeletonRandomNum[8] = user.randomNum[8];
-                    user.skeletonRandomNum[2] = user.randomNum[2];
-                    user.skeletonRandomNum[6] = user.randomNum[6];
-                    user.skeletonRandomNum[5] = user.randomNum[5];
-                    user.paylines.push(i);
-                }
-                break;
-            case 15:
-                NumberStack.push(user.randomNum[9]);
-                NumberStack.push(user.randomNum[8]);
-                NumberStack.push(user.randomNum[12]);
-                NumberStack.push(user.randomNum[6]);
-                NumberStack.push(user.randomNum[5]);
-                money = countCheck(NumberStack, user);
-                if (money > 0) {
-                    user.skeletonRandomNum[9] = user.randomNum[9];
-                    user.skeletonRandomNum[8] = user.randomNum[8];
-                    user.skeletonRandomNum[12] = user.randomNum[12];
-                    user.skeletonRandomNum[6] = user.randomNum[6];
-                    user.skeletonRandomNum[5] = user.randomNum[5];
-                    user.paylines.push(i);
-                }
-                break;
-            case 16:
-                NumberStack.push(user.randomNum[4]);
-                NumberStack.push(user.randomNum[8]);
-                NumberStack.push(user.randomNum[7]);
-                NumberStack.push(user.randomNum[6]);
-                NumberStack.push(user.randomNum[0]);
-                money = countCheck(NumberStack, user);
-                if (money > 0) {
-                    user.skeletonRandomNum[4] = user.randomNum[4];
-                    user.skeletonRandomNum[8] = user.randomNum[8];
-                    user.skeletonRandomNum[7] = user.randomNum[7];
-                    user.skeletonRandomNum[6] = user.randomNum[6];
-                    user.skeletonRandomNum[0] = user.randomNum[0];
-                    user.paylines.push(i);
-                }
-                break;
-            case 17:
-                NumberStack.push(user.randomNum[14]);
-                NumberStack.push(user.randomNum[8]);
-                NumberStack.push(user.randomNum[7]);
-                NumberStack.push(user.randomNum[6]);
-                NumberStack.push(user.randomNum[10]);
-                money = countCheck(NumberStack, user);
-                if (money > 0) {
-                    user.skeletonRandomNum[14] = user.randomNum[14];
-                    user.skeletonRandomNum[8] = user.randomNum[8];
-                    user.skeletonRandomNum[7] = user.randomNum[7];
-                    user.skeletonRandomNum[6] = user.randomNum[6];
-                    user.skeletonRandomNum[10] = user.randomNum[10];
-                    user.paylines.push(i);
-                }
-                break;
-            case 18:
-                NumberStack.push(user.randomNum[4]);
-                NumberStack.push(user.randomNum[13]);
-                NumberStack.push(user.randomNum[2]);
-                NumberStack.push(user.randomNum[11]);
-                NumberStack.push(user.randomNum[0]);
-                money = countCheck(NumberStack, user);
-                if (money > 0) {
-                    user.skeletonRandomNum[4] = user.randomNum[4];
-                    user.skeletonRandomNum[13] = user.randomNum[13];
-                    user.skeletonRandomNum[2] = user.randomNum[2];
-                    user.skeletonRandomNum[11] = user.randomNum[11];
-                    user.skeletonRandomNum[0] = user.randomNum[0];
-                    user.paylines.push(i);
-                }
-                break;
-            case 19:
-                NumberStack.push(user.randomNum[4]);
-                NumberStack.push(user.randomNum[13]);
-                NumberStack.push(user.randomNum[12]);
-                NumberStack.push(user.randomNum[11]);
-                NumberStack.push(user.randomNum[0]);
-                money = countCheck(NumberStack, user);
-                if (money > 0) {
-                    user.skeletonRandomNum[4] = user.randomNum[4];
-                    user.skeletonRandomNum[13] = user.randomNum[13];
-                    user.skeletonRandomNum[12] = user.randomNum[12];
-                    user.skeletonRandomNum[11] = user.randomNum[11];
-                    user.skeletonRandomNum[0] = user.randomNum[0];
-                    user.paylines.push(i);
-                }
-                break;
-            case 20:
-                NumberStack.push(user.randomNum[14]);
-                NumberStack.push(user.randomNum[3]);
-                NumberStack.push(user.randomNum[2]);
-                NumberStack.push(user.randomNum[1]);
-                NumberStack.push(user.randomNum[10]);
-                money = countCheck(NumberStack, user);
-                if (money > 0) {
-                    user.skeletonRandomNum[14] = user.randomNum[14];
-                    user.skeletonRandomNum[3] = user.randomNum[3];
-                    user.skeletonRandomNum[2] = user.randomNum[2];
-                    user.skeletonRandomNum[1] = user.randomNum[1];
-                    user.skeletonRandomNum[10] = user.randomNum[10];
-                    user.paylines.push(i);
-                }
-                break;
-            case 21:
-                NumberStack.push(user.randomNum[14]);
-                NumberStack.push(user.randomNum[3]);
-                NumberStack.push(user.randomNum[12]);
-                NumberStack.push(user.randomNum[1]);
-                NumberStack.push(user.randomNum[10]);
-                money = countCheck(NumberStack, user);
-                if (money > 0) {
-                    user.skeletonRandomNum[14] = user.randomNum[14];
-                    user.skeletonRandomNum[3] = user.randomNum[3];
-                    user.skeletonRandomNum[12] = user.randomNum[12];
-                    user.skeletonRandomNum[1] = user.randomNum[1];
-                    user.skeletonRandomNum[10] = user.randomNum[10];
-                    user.paylines.push(i);
-                }
-                break;
-            case 22:
-                NumberStack.push(user.randomNum[4]);
-                NumberStack.push(user.randomNum[3]);
-                NumberStack.push(user.randomNum[12]);
-                NumberStack.push(user.randomNum[1]);
-                NumberStack.push(user.randomNum[0]);
-                money = countCheck(NumberStack, user);
-                if (money > 0) {
-                    user.skeletonRandomNum[4] = user.randomNum[4];
-                    user.skeletonRandomNum[3] = user.randomNum[3];
-                    user.skeletonRandomNum[12] = user.randomNum[12];
-                    user.skeletonRandomNum[1] = user.randomNum[1];
-                    user.skeletonRandomNum[0] = user.randomNum[0];
-                    user.paylines.push(i);
-                }
-                break;
-            case 23:
-                NumberStack.push(user.randomNum[14]);
-                NumberStack.push(user.randomNum[13]);
-                NumberStack.push(user.randomNum[2]);
-                NumberStack.push(user.randomNum[11]);
-                NumberStack.push(user.randomNum[10]);
-                money = countCheck(NumberStack, user);
-                if (money > 0) {
-                    user.skeletonRandomNum[14] = user.randomNum[14];
-                    user.skeletonRandomNum[13] = user.randomNum[13];
-                    user.skeletonRandomNum[2] = user.randomNum[2];
-                    user.skeletonRandomNum[11] = user.randomNum[11];
-                    user.skeletonRandomNum[10] = user.randomNum[10];
-                    user.paylines.push(i);
-                }
-                break;
-            case 24:
-                NumberStack.push(user.randomNum[4]);
-                NumberStack.push(user.randomNum[3]);
-                NumberStack.push(user.randomNum[7]);
-                NumberStack.push(user.randomNum[11]);
-                NumberStack.push(user.randomNum[0]);
-                money = countCheck(NumberStack, user);
-                if (money > 0) {
-                    user.skeletonRandomNum[4] = user.randomNum[4];
-                    user.skeletonRandomNum[3] = user.randomNum[3];
-                    user.skeletonRandomNum[7] = user.randomNum[7];
-                    user.skeletonRandomNum[11] = user.randomNum[11];
-                    user.skeletonRandomNum[0] = user.randomNum[0];
-                    user.paylines.push(i);
-                }
-                break;
-            case 25:
-                NumberStack.push(user.randomNum[14]);
-                NumberStack.push(user.randomNum[3]);
-                NumberStack.push(user.randomNum[7]);
-                NumberStack.push(user.randomNum[1]);
-                NumberStack.push(user.randomNum[10]);
-                money = countCheck(NumberStack, user);
-                if (money > 0) {
-                    user.skeletonRandomNum[4] = user.randomNum[4];
-                    user.skeletonRandomNum[3] = user.randomNum[3];
-                    user.skeletonRandomNum[7] = user.randomNum[7];
-                    user.skeletonRandomNum[1] = user.randomNum[1];
-                    user.skeletonRandomNum[10] = user.randomNum[10];
-                    user.paylines.push(i);
-                }
-                break;
-        }
-        user.totalMoney += money;
-    }
-};
-
-const countCheck = (randomArray, user) => {
-    var setNum = 0;
-    for (var i = 0; i < randomArray.length; i++) {
-        var bump = randomArray[i];
-        var count = 0;
-        for (var j = 0; j < randomArray.length; j++) {
-            if (bump === randomArray[j] || Math.abs(bump) === 11) {
-                count++;
-            }
-        }
-        if (count >= 3) {
-            setNum = randomArray[i];
-            break;
-        }
-    }
-
-    return levelCheck(setNum, count, user);
-};
-
-const levelCheck = (number, count, user) => {
+const CalcResult = async (user) => {
+    var preCDNum = user.previousCardNum;
+    var newCDNum = user.newCardNum;
+    var newCONum = user.newColorNum;
+    var position = user.betPosition;
+    var bet = user.betBalance;
     var money = 0;
-    switch (number) {
-        case 1:
-            if (count === 3) money = 50 * user.betBalance;
-            if (count === 4) money = 400 * user.betBalance;
-            if (count === 5) money = 4000 * user.betBalance;
+    switch (position) {
+        case 0: //High
+            if (newCDNum > preCDNum) {
+                switch (preCDNum) {
+                    case 0:
+                        money = bet * 1.09;
+                        break;
+                    case 1:
+                        money = bet * 1.2;
+                        break;
+                    case 2:
+                        money = bet * 1.33;
+                        break;
+                    case 3:
+                        money = bet * 1.5;
+                        break;
+                    case 4:
+                        money = bet * 1.71;
+                        break;
+                    case 5:
+                        money = bet * 2;
+                        break;
+                    case 6:
+                        money = bet * 2.4;
+                        break;
+                    case 7:
+                        money = bet * 3;
+                        break;
+                    case 8:
+                        money = bet * 4;
+                        break;
+                    case 9:
+                        money = bet * 6;
+                        break;
+                    case 10:
+                        money = bet * 12;
+                        break;
+                }
+            }
             break;
-        case 2:
-            if (count === 3) money = 40 * user.betBalance;
-            if (count === 4) money = 200 * user.betBalance;
-            if (count === 5) money = 2000 * user.betBalance;
+        case 1: //Low
+            if (newCDNum < preCDNum) {
+                switch (preCDNum) {
+                    case 1:
+                        money = bet * 12;
+                        break;
+                    case 2:
+                        money = bet * 6;
+                        break;
+                    case 3:
+                        money = bet * 4;
+                        break;
+                    case 4:
+                        money = bet * 3;
+                        break;
+                    case 5:
+                        money = bet * 2.4;
+                        break;
+                    case 6:
+                        money = bet * 2;
+                        break;
+                    case 7:
+                        money = bet * 1.71;
+                        break;
+                    case 8:
+                        money = bet * 1.5;
+                        break;
+                    case 9:
+                        money = bet * 1.33;
+                        break;
+                    case 10:
+                        money = bet * 1.2;
+                        break;
+                    case 11:
+                        money = bet * 1.09;
+                        break;
+                }
+            }
             break;
-        case 3:
-            if (count === 3) money = 30 * user.betBalance;
-            if (count === 4) money = 150 * user.betBalance;
-            if (count === 5) money = 500 * user.betBalance;
+        case 2: //Joker
+            if (newCDNum === 12) money = bet * 24;
             break;
-        case 4:
-            if (count === 3) money = 20 * user.betBalance;
-            if (count === 400) money = 100 * user.betBalance;
-            if (count === 5) money = 400 * user.betBalance;
+        case 3: //Red
+            if (newCONum === 0) money = bet * 2;
             break;
-        case 5:
-        case 6:
-            if (count === 3) money = 15 * user.betBalance;
-            if (count === 400) money = 75 * user.betBalance;
-            if (count === 5) money = 300 * user.betBalance;
+        case 4: //Black
+            if (newCONum === 1) money = bet * 2;
             break;
-        case 7:
-        case 8:
-            if (count === 3) money = 10 * user.betBalance;
-            if (count === 400) money = 50 * user.betBalance;
-            if (count === 5) money = 250 * user.betBalance;
+        case 5: //Numbers
+            if (Rule.Numbers.indexOf(newCDNum) !== -1) money = bet * 1.5;
             break;
-        case 9:
-        case 10:
-            if (count === 3) money = 5 * user.betBalance;
-            if (count === 400) money = 25 * user.betBalance;
-            if (count === 5) money = 200 * user.betBalance;
+        case 6: //JQKA
+            if (Rule.JQKA.indexOf(newCDNum) !== -1) money = bet * 3;
             break;
-        default:
+        case 7: //JQ
+            if (Rule.JQ.indexOf(newCDNum) !== -1) money = bet * 6;
+            break;
+        case 8: //KA
+            if (Rule.KA.indexOf(newCDNum) !== -1) money = bet * 6;
             break;
     }
-    return money;
+    user.totalMoney = money;
 };
 
 module.exports = {
     StartSignal: async (req, res) => {
         try {
-            const { token, totalBet, betValue, betLine } = req.body;
+            const { token, betValue } = req.body;
 
-            console.log("token: ", token);
-            
             let user = usersPoints[token];
             if (user === undefined) {
                 usersPoints[token] = {
                     totalMoney: 0,
-                    randomNum: [],
-                    skeletonRandomNum: [],
-                    paylines: [],
                     betBalance: 0,
+                    betPosition: 0,
+                    previousCardNum: 0,
+                    newCardNum: 0,
+                    newColorNum: 0,
+                    winlose: 0,
                 };
                 user = usersPoints[token];
             }
             user.betBalance = betValue;
 
             await CreateRandomNumber(user);
-            await calcMatch(user, parseInt(betLine));
 
-            var result = await axios.post(
-                process.env.PLATFORM_SERVER + "api/games/bet",
-                {
-                    token: token,
-                    amount: totalBet,
-                }
-            );
-
-            result = await axios.post(
-                process.env.PLATFORM_SERVER + "api/games/winlose",
-                {
-                    token: token,
-                    amount: user.totalMoney,
-                    winState: user.totalMoney ? true : false,
-                }
-            );
+            // var result = await axios.post(
+            //     process.env.PLATFORM_SERVER + "api/games/bet",
+            //     {
+            //         token: token,
+            //         amount: totalBet,
+            //     }
+            // );
 
             res.json({
                 status: true,
-                winpaylines: user.paylines,
-                randomNums: user.skeletonRandomNum,
-                moneyResult: user.totalMoney,
+                cardNum: user.newCardNum,
+                colorNum: user.newColorNum,
             });
-
-            user.totalMoney = 0;
-            user.paylines = [];
-            user.betBalance = 0;
         } catch (err) {
             console.log(err);
             res.json({
                 status: false,
-                message: "Server Error",
+            });
+        }
+    },
+    Gaming: async (req, res) => {
+        try {
+            const { token, betPosition } = req.body;
+
+            let user = usersPoints[token];
+            user.betPosition = betPosition;
+
+            await CreateRandomNumber(user);
+            await CalcResult(user);
+
+            if (user.totalMoney === 0) {
+                // result = await axios.post(
+                //     process.env.PLATFORM_SERVER + "api/games/winlose",
+                //     {
+                //         token: token,
+                //         amount: user.totalMoney,
+                //         winState: user.totalMoney ? true : false,
+                //     }
+                // );
+
+                res.json({
+                    status: true,
+                    gameStatus: false,
+                    cardNum: user.newCardNum,
+                    colorNum: user.newColorNum,
+                });
+
+                user.betBalance = 0;
+            } else {
+                user.betBalance += user.totalMoney;
+
+                res.json({
+                    status: true,
+                    gameStatus: true,
+                    cardNum: user.newCardNum,
+                    colorNum: user.newColorNum,
+                    moneyResult: user.betBalance,
+                });
+            }
+
+            user.totalMoney = 0;
+        } catch (err) {
+            console.log(err);
+            res.json({
+                status: false,
+            });
+        }
+    },
+    CashOut: async (req, res) => {
+        try {
+            const { token } = req.body;
+
+            // result = await axios.post(
+            //     process.env.PLATFORM_SERVER + "api/games/winlose",
+            //     {
+            //         token: token,
+            //         amount: user.totalMoney,
+            //         winState: user.totalMoney ? true : false,
+            //     }
+            // );
+
+            res.json({
+                status: true,
+                moneyResult: user.betBalance,
+            });
+
+            user.betBalance = 0;
+            user.totalMoney = 0;
+        } catch (err) {
+            console.log(err);
+            res.json({
+                status: false,
             });
         }
     },
