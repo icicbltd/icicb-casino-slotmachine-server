@@ -28,7 +28,7 @@ const CalcResult = async (user) => {
     var preCDNum = user.previousCardNum;
     var newCDNum = user.newCardNum;
     var newCONum = user.newColorNum;
-    var position = user.betPosition;
+    var position = Number(user.betPosition);
     var bet = user.betBalance;
     var money = 0;
     switch (position) {
@@ -157,13 +157,10 @@ module.exports = {
 
             await CreateRandomNumber(user);
 
-            // var result = await axios.post(
-            //     process.env.PLATFORM_SERVER + "api/games/bet",
-            //     {
-            //         token: token,
-            //         amount: totalBet,
-            //     }
-            // );
+            await axios.post(process.env.PLATFORM_SERVER + "api/games/bet", {
+                token: token,
+                amount: user.betBalance,
+            });
 
             res.json({
                 status: true,
@@ -188,14 +185,15 @@ module.exports = {
             await CalcResult(user);
 
             if (user.totalMoney === 0) {
-                // result = await axios.post(
-                //     process.env.PLATFORM_SERVER + "api/games/winlose",
-                //     {
-                //         token: token,
-                //         amount: user.totalMoney,
-                //         winState: user.totalMoney ? true : false,
-                //     }
-                // );
+                await axios.post(
+                    process.env.PLATFORM_SERVER + "api/games/winlose",
+                    {
+                        token: token,
+                        amount: 0,
+                        winState: false,
+                    }
+                );
+                user.betBalance = 0;
 
                 res.json({
                     status: true,
@@ -203,17 +201,15 @@ module.exports = {
                     cardNum: user.newCardNum,
                     colorNum: user.newColorNum,
                 });
-
-                user.betBalance = 0;
             } else {
-                user.betBalance += user.totalMoney;
+                user.betBalance = user.totalMoney;
 
                 res.json({
                     status: true,
                     gameStatus: true,
                     cardNum: user.newCardNum,
                     colorNum: user.newColorNum,
-                    moneyResult: user.betBalance,
+                    moneyResult: user.totalMoney,
                 });
             }
 
@@ -229,14 +225,16 @@ module.exports = {
         try {
             const { token } = req.body;
 
-            // result = await axios.post(
-            //     process.env.PLATFORM_SERVER + "api/games/winlose",
-            //     {
-            //         token: token,
-            //         amount: user.totalMoney,
-            //         winState: user.totalMoney ? true : false,
-            //     }
-            // );
+            let user = usersPoints[token];
+
+            await axios.post(
+                process.env.PLATFORM_SERVER + "api/games/winlose",
+                {
+                    token: token,
+                    amount: user.betBalance,
+                    winState: true,
+                }
+            );
 
             res.json({
                 status: true,
